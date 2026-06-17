@@ -25,3 +25,6 @@ const influences = [
 const moves = [{plate: 0, delta: 2}];
 
 const result = applyMoves(n, positions, influences, moves);
+
+markdown
+![Test Status](https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/test-and-push.yml/badge.svg?branch=source)
