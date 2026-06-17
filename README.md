@@ -1,5 +1,7 @@
 # Gothic Plate Solver
 
+[![Test Status](https://github.com/EvgeniySer/control-dot-1-for-test/actions/workflows/test-and-push.yml/badge.svg?branch=source)](https://github.com/EvgeniySer/control-dot-1-for-test/actions/workflows/test-and-push.yml)
+
 Решение головоломки с пластинами из игры Gothic Remake.
 
 ## Задание
@@ -25,6 +27,3 @@ const influences = [
 const moves = [{plate: 0, delta: 2}];
 
 const result = applyMoves(n, positions, influences, moves);
-
-markdown
-![Test Status](https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/test-and-push.yml/badge.svg?branch=source)
