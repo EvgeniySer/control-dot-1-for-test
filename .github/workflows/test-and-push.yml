@@ -1,0 +1,53 @@
+name: Test and Push to Main
+
+on:
+  push:
+    branches:
+      - source
+
+jobs:
+  test-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout source branch
+      uses: actions/checkout@v4
+      with:
+        ref: source
+        fetch-depth: 0
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run tests
+      id: tests
+      run: npm test
+    
+    - name: Push to main (if tests passed)
+      if: success()
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        
+        SOURCE_COMMIT=$(git rev-parse source)
+        
+        git checkout main || git checkout --orphan main
+        git rm -rf . || true
+        
+        git checkout $SOURCE_COMMIT -- .github package.json package-lock.json src/*.test.js README.md .gitignore
+        
+        rm -f src/plateSolver.js
+        
+        echo "// Решение не включено в main ветку" > src/plateSolver.js
+        echo "// Смотрите ветку source для полного кода" >> src/plateSolver.js
+        
+        git add .
+        git commit -m "Auto-update from source (tests passed)"
+        
+        git push origin main
