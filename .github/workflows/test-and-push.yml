@@ -5,6 +5,9 @@ on:
     branches:
       - source
 
+permissions:
+  contents: write
+
 jobs:
   test-and-push:
     runs-on: ubuntu-latest
@@ -26,7 +29,6 @@ jobs:
       run: npm ci
     
     - name: Run tests
-      id: tests
       run: npm test
     
     - name: Push to main (if tests passed)
@@ -40,7 +42,7 @@ jobs:
         git checkout main || git checkout --orphan main
         git rm -rf . || true
         
-        git checkout $SOURCE_COMMIT -- .github package.json package-lock.json src/*.test.js README.md .gitignore
+        git checkout $SOURCE_COMMIT -- package.json package-lock.json src/*.test.js .github .gitignore README.md
         
         rm -f src/plateSolver.js
         
@@ -48,6 +50,8 @@ jobs:
         echo "// Смотрите ветку source для полного кода" >> src/plateSolver.js
         
         git add .
-        git commit -m "Auto-update from source (tests passed)"
+        git commit -m "Auto-update from source (tests passed)" || echo "No changes to commit"
         
         git push origin main
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
